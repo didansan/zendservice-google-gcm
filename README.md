@@ -1,15 +1,11 @@
-ZendService\Google\Gcm [![Build Status](https://api.travis-ci.org/zendframework/ZendService_Google_Gcm.svg?branch=develop)](https://travis-ci.org/zendframework/ZendService_Google_Gcm)
+ZendService\Google\Gcm - upgraded with Laminas
 ================================
-
-> ## Repository abandoned 2019-12-05
->
-> This repository is no longer maintained.
 
 Provides support for Google push notifications.
 
 ## Requirements
 
-* PHP >= 5.6
+* PHP >= 7.1
 
 ## Getting Started
 

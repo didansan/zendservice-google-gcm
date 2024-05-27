@@ -7,32 +7,25 @@
  * @copyright  Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd New BSD License
  *
- * @category   ZendService
+ * @category   Laminas
  */
-namespace ZendServiceTest\Google\Gcm;
 
+namespace LaminasTest\Google\Gcm;
+
+use Laminas\Google\Gcm\Message;
+use Laminas\Google\Gcm\Response;
 use PHPUnit\Framework\TestCase;
-use ZendService\Google\Gcm\Message;
-use ZendService\Google\Gcm\Response;
+use PHPUnit_Framework_Error;
+use TypeError;
 
 /**
- * @category   ZendService
- * @group      ZendService
- * @group      ZendService_Google
- * @group      ZendService_Google_Gcm
+ * @category   Laminas
+ * @group      Laminas
+ * @group      Laminas_Google
+ * @group      Laminas_Google_Gcm
  */
 class ResponseTest extends TestCase
 {
-    /**
-     * @var Message
-     */
-    private $m;
-
-    public function setUp()
-    {
-        $this->m = new Message();
-    }
-
     public function testConstructorExpectedBehavior()
     {
         $response = new Response();
@@ -46,13 +39,13 @@ class ResponseTest extends TestCase
 
         $message = new Message();
         $responseArray = [
-            'results' => [
+            'results'       => [
                 ['message_id' => '1:1234'],
             ],
-            'success' => 1,
-            'failure' => 0,
+            'success'       => 1,
+            'failure'       => 0,
             'canonical_ids' => 0,
-            'multicast_id' => 1,
+            'multicast_id'  => 1,
         ];
         $response = new Response($responseArray, $message);
         self::assertEquals($responseArray, $response->getResponse());
@@ -61,21 +54,7 @@ class ResponseTest extends TestCase
 
     public function testInvalidConstructorThrowsException()
     {
-        if (PHP_VERSION_ID < 70000) {
-            self::markTestSkipped('PHP 7 required.');
-        }
-
-        $this->expectException(\TypeError::class);
-        new Response('{bad');
-    }
-
-    public function testInvalidConstructorThrowsExceptionOnPhp7()
-    {
-        if (PHP_VERSION_ID >= 70000) {
-            self::markTestSkipped('PHP >=5.5 required.');
-        }
-
-        $this->expectException(\PHPUnit_Framework_Error::class);
+        $this->expectException(TypeError::class);
         new Response('{bad');
     }
 
@@ -90,13 +69,13 @@ class ResponseTest extends TestCase
     public function testResponse()
     {
         $responseArr = [
-            'results' => [
+            'results'       => [
                 ['message_id' => '1:234'],
             ],
-            'success' => 1,
-            'failure' => 0,
+            'success'       => 1,
+            'failure'       => 0,
             'canonical_ids' => 0,
-            'multicast_id' => '123',
+            'multicast_id'  => '123',
         ];
         $response = new Response();
         $response->setResponse($responseArr);

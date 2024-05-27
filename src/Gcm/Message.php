@@ -7,19 +7,22 @@
  * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  *
- * @category  ZendService
+ * @category  Laminas
  */
-namespace ZendService\Google\Gcm;
 
-use ZendService\Google\Exception;
-use Zend\Json\Json;
+namespace Laminas\Google\Gcm;
+
+use Laminas\Google\Exception;
+use Laminas\Google\Exception\InvalidArgumentException;
+use Laminas\Google\Exception\RuntimeException;
+use Laminas\Json\Json;
 
 /**
  * Google Cloud Messaging Message
  * This class defines a message to be sent
  * through the Google Cloud Messaging API.
  *
- * @category   ZendService
+ * @category   Laminas
  */
 class Message
 {
@@ -56,7 +59,7 @@ class Message
     /**
      * @var int
      */
-    protected $timeToLive = 2419200;
+    protected $timeToLive = 2_419_200;
 
     /**
      * @var string
@@ -71,11 +74,9 @@ class Message
     /**
      * Set Registration Ids.
      *
-     * @param array $ids
-     *
-     * @throws \ZendService\Google\Exception\InvalidArgumentException
      *
      * @return Message
+     * @throws InvalidArgumentException
      */
     public function setRegistrationIds(array $ids)
     {
@@ -108,10 +109,10 @@ class Message
      */
     public function addRegistrationId($id)
     {
-        if (! is_string($id) || empty($id)) {
-            throw new Exception\InvalidArgumentException('$id must be a non-empty string');
+        if (!is_string($id) || empty($id)) {
+            throw new InvalidArgumentException('$id must be a non-empty string');
         }
-        if (! in_array($id, $this->registrationIds)) {
+        if (!in_array($id, $this->registrationIds)) {
             $this->registrationIds[] = $id;
         }
 
@@ -151,8 +152,8 @@ class Message
      */
     public function setCollapseKey($key)
     {
-        if (null !== $key && ! (is_string($key) && strlen($key) > 0)) {
-            throw new Exception\InvalidArgumentException('$key must be null or a non-empty string');
+        if (null !== $key && !(is_string($key) && strlen($key) > 0)) {
+            throw new InvalidArgumentException('$key must be null or a non-empty string');
         }
         $this->collapseKey = $key;
 
@@ -172,27 +173,27 @@ class Message
     /**
      * Set priority
      *
-     * @param string $priority
+     * @param string|null $priority
+     *
      * @return Message
      * @throws Exception\InvalidArgumentException
      */
     public function setPriority($priority)
     {
-        if (! is_null($priority) && ! (is_string($priority) && strlen($priority) > 0)) {
-            throw new Exception\InvalidArgumentException('$priority must be null or a non-empty string');
+        if (!is_null($priority) && !(is_string($priority) && strlen($priority) > 0)) {
+            throw new InvalidArgumentException('$priority must be null or a non-empty string');
         }
         $this->priority = $priority;
+
         return $this;
     }
 
     /**
      * Set Data
      *
-     * @param array $data
-     *
-     * @throws \ZendService\Google\Exception\InvalidArgumentException
      *
      * @return Message
+     * @throws InvalidArgumentException
      */
     public function setData(array $data)
     {
@@ -218,20 +219,18 @@ class Message
      * Add Data.
      *
      * @param string $key
-     * @param mixed  $value
-     *
-     * @throws Exception\RuntimeException
-     * @throws Exception\InvalidArgumentException
      *
      * @return Message
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\RuntimeException
      */
-    public function addData($key, $value)
+    public function addData($key, mixed $value)
     {
-        if (! is_string($key) || empty($key)) {
-            throw new Exception\InvalidArgumentException('$key must be a non-empty string');
+        if (!is_string($key) || empty($key)) {
+            throw new InvalidArgumentException('$key must be a non-empty string');
         }
         if (array_key_exists($key, $this->data)) {
-            throw new Exception\RuntimeException('$key conflicts with current set data');
+            throw new RuntimeException('$key conflicts with current set data');
         }
         $this->data[$key] = $value;
 
@@ -253,7 +252,6 @@ class Message
     /**
      * Set notification
      *
-     * @param array $data
      * @return Message
      */
     public function setNotification(array $data)
@@ -262,6 +260,7 @@ class Message
         foreach ($data as $k => $v) {
             $this->addNotification($k, $v);
         }
+
         return $this;
     }
 
@@ -279,20 +278,21 @@ class Message
      * Add notification data
      *
      * @param string $key
-     * @param mixed $value
+     *
      * @return Message
      * @throws Exception\InvalidArgumentException
      * @throws Exception\RuntimeException
      */
-    public function addNotification($key, $value)
+    public function addNotification($key, mixed $value)
     {
-        if (! is_string($key) || empty($key)) {
-            throw new Exception\InvalidArgumentException('$key must be a non-empty string');
+        if (!is_string($key) || empty($key)) {
+            throw new InvalidArgumentException('$key must be a non-empty string');
         }
         if (array_key_exists($key, $this->notification)) {
-            throw new Exception\RuntimeException('$key conflicts with current set data');
+            throw new RuntimeException('$key conflicts with current set data');
         }
         $this->notification[$key] = $value;
+
         return $this;
     }
 
@@ -317,7 +317,7 @@ class Message
      */
     public function setDelayWhileIdle($delay)
     {
-        $this->delayWhileIdle = (bool) $delay;
+        $this->delayWhileIdle = (bool)$delay;
 
         return $this;
     }
@@ -341,7 +341,7 @@ class Message
      */
     public function setTimeToLive($ttl)
     {
-        $this->timeToLive = (int) $ttl;
+        $this->timeToLive = (int)$ttl;
 
         return $this;
     }
@@ -367,8 +367,8 @@ class Message
      */
     public function setRestrictedPackageName($name)
     {
-        if (null !== $name && ! (is_string($name) && strlen($name) > 0)) {
-            throw new Exception\InvalidArgumentException('$name must be null OR a non-empty string');
+        if (null !== $name && !(is_string($name) && strlen($name) > 0)) {
+            throw new InvalidArgumentException('$name must be null OR a non-empty string');
         }
         $this->restrictedPackageName = $name;
 
@@ -394,7 +394,7 @@ class Message
      */
     public function setDryRun($dryRun)
     {
-        $this->dryRun = (bool) $dryRun;
+        $this->dryRun = (bool)$dryRun;
 
         return $this;
     }
@@ -437,7 +437,7 @@ class Message
         if ($this->delayWhileIdle) {
             $json['delay_while_idle'] = $this->delayWhileIdle;
         }
-        if ($this->timeToLive != 2419200) {
+        if ($this->timeToLive != 2_419_200) {
             $json['time_to_live'] = $this->timeToLive;
         }
         if ($this->restrictedPackageName) {
